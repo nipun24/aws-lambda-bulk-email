@@ -1,3 +1,7 @@
+# Email Queuing
+
+Queues email in AWS SQS in batches of 50 (maximum amount of supported by AWS SES) to be processed and send by the worker function.
+
 ## Deploy Steps
 
 1. `cd venv/lib/python-X.X/site-packages`
@@ -22,7 +26,7 @@ x-api-key: \<api-key\>
   "data": [
     {
       "e": "string",
-      ...
+      ...some other key value pairs
     }
   ],
   "cc": [
@@ -35,7 +39,7 @@ x-api-key: \<api-key\>
   ],
   "subject": "string",
   "html_body": "string",
-  "text_body": "",
+  "text_body": "string",
   "reply_to": [
     "string",
     "string"
@@ -45,19 +49,19 @@ x-api-key: \<api-key\>
 
 **Parameters:**
 
-* **from_email** [REQUIRED] (string): The email address that is sending the email.
-* **from_name** [REQUIRED] (string): The name to be displayed on the mail client.
-* **data** [REQUIRED] (object):
-    * **e** [REQUIRED] (string): email address of the recipient.
-    * any other key value pairs can be added for email templating.
-* **cc** [REQUIRED] (array): cc email addresses. Default value = `[]`
-    * (string) ...
-* **bcc** [REQUIRED] (array): bcc email addresses. Default value = `[]`
-    * (string) ...
-* **subject** [REQUIRED] (string): subject of the email.
-* **html_body** [REQUIRED] (string): body of the email in HTML. Default value = `""`
-* **text_body** [REQUIRED] (string): body of the email in text. Default value = `""`
-* **reply_to** [REQUIRED] (string): reply to email address. Default value = `[]`
+- **from_email** [REQUIRED] (string): The email address that is sending the email.
+- **from_name** [REQUIRED] (string): The name to be displayed on the mail client.
+- **data** [REQUIRED] (object):
+  - **e** [REQUIRED] (string): email address of the recipient.
+  - any other key value pairs can be added for email templating.
+- **cc** [REQUIRED] (array): cc email addresses. Default value = `[]`
+  - (string) ...
+- **bcc** [REQUIRED] (array): bcc email addresses. Default value = `[]`
+  - (string) ...
+- **subject** [REQUIRED] (string): subject of the email.
+- **html_body** [REQUIRED] (string): body of the email in HTML. Can contain `${}` for string substitution from the data key. Default value = `""`
+- **text_body** [REQUIRED] (string): body of the email in text. Can contain `${}` for string substitution from the data key. Default value = `""`
+- **reply_to** [REQUIRED] (string): reply to email address. Default value = `[]`
 
 ### Sample
 
@@ -78,9 +82,7 @@ x-api-key: \<api-key\>
   "subject": "Hello test!!",
   "html_body": "Hello ${name}",
   "text_body": "",
-  "reply_to": [
-    "help@qwe.com"
-  ]
+  "reply_to": ["help@qwe.com"]
 }
 ```
 
